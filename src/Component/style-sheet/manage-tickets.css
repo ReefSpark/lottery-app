@@ -1,0 +1,9 @@
+.user-form{
+    width: 60%;
+    margin:5% 0 0 17%;
+}
+.button-ticket{
+    display: flex;
+    flex-flow: row;
+    justify-content:space-around;
+}
