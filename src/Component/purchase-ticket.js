@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './style-sheet/purchase-ticket.css'
-import _ from 'lodash'; 
+import _ from 'lodash';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Axios from 'axios'
@@ -51,6 +51,9 @@ class PurchaseTicket extends Component {
             this.setState({ ticketNames: response.data.data.attributes.data, actualPrice: response.data.data.attributes.data[0].price, ticketName: response.data.data.attributes.data[0]._id })
         }).catch((err) => {
         });
+    }
+    componentDidUpdate() {
+        this.setState({ quantity: 0 })
     }
 
     handleUserNameSelection = event => {

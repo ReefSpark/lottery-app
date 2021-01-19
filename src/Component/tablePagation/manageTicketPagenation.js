@@ -18,30 +18,34 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
-const URL = 'http://f56b4f56e255.ngrok.io'
+const URL = `${process.env.REACT_APP_API_BASE_URL}`;
 //popup
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 const columns = [
-  { id: 'ticket-name', label: 'Ticket Name', minWidth: 50, align: 'center' },
+  
+  { id: 'name', label: 'Name', minWidth: 100 },
   {
     id: 'price',
     label: 'Price',
-    minWidth: 50,
-    align: 'center',
-    // format: (value) => value.toLocaleString('en-US'),
+    minWidth: 100,
+    align: 'right'
   },
-//   history[{ id: 'gender', label: 'Gender', minWidth: 50, align: 'center', },
-//   { id: 'is_active', label: 'Active', minWidth: 50, align: 'center', }]
-  
-
+  {
+    id: 'created_date',
+    label: 'Create Date',
+    minWidth: 100,
+    align: 'right'
+  }
 ];
-
+const ticketColumns = [
+  {id: 'combination', label: 'Combination',minWidth: 100},
+  {id: 'prize', label: 'Prize',minWidth: 100,}
+]
 const useStyles = makeStyles({
   root: {
     width: '100%',
-    margin:`8% 0 0 0`,
   },
   container: {
     maxHeight: 440,
@@ -56,20 +60,26 @@ export default function StickyHeadTable() {
   const [editData, setEditData] = React.useState({});
   const [readOnly, setReadOnly] = React.useState(true);
   const [open, setOpen] = React.useState(false);
+  const [tickets, setTickets] = React.useState([]);
+  const [ticketLoading, setTicketLoading] = React.useState(false);
   // popup
   const handleClose = () => {
     setOpen(false);
+    setTicketLoading(false);
+    setTickets([])
     setReadOnly(true)
   };
   // component did mount
   useEffect(async () => {
-    let { data } = await Axios.get(`${URL}/api/v1/user?page_no=${page}&limit=${rowsPerPage}`);
+    let { data } = await Axios.get(`${URL}/api/v1/master`);
+    // let { data } = await Axios.get(`${URL}/api/v1/user?page_no=${page}&limit=${rowsPerPage}`);
     console.log(data.data.attributes.data)
     setRow(data.data.attributes.data);
   }, []);
   // our custom function
   const userPagination = async (event, something) => {
-    let { data } = await Axios.get(`${URL}/api/v1/user?page_no=${something}&limit=${rowsPerPage}`);
+    let { data } = await Axios.get(`${URL}/api/v1/master`);
+    // let { data } = await Axios.get(`${URL}/api/v1/user?page_no=${something}&limit=${rowsPerPage}`);
     setRow(data.data.attributes.data);
     setRowsPerPage(+rowsPerPage);
     setPage(something);
@@ -93,9 +103,17 @@ export default function StickyHeadTable() {
     setOpen(false);
     setReadOnly(true);
   }
+  const getTicket = async (a) => {
+    setTicketLoading(true)
+    let { data } = await Axios.get(`${URL}/api/v1/ticket/${a._id}`);
+    console.log(data.data.attributes)
+    setTickets(data.data.attributes.data);
+    setTicketLoading(false);
+  }
   function rowClick(a) {
     console.log(a);
-    setEditData(a);
+    // setEditData(a);
+    getTicket(a)
     setOpen(true);
   }
   // popup
@@ -157,13 +175,50 @@ export default function StickyHeadTable() {
         open={open}
         TransitionComponent={Transition}
         keepMounted
+        disableBackdropClick={true}
         onClose={handleClose}
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle id="alert-dialog-slide-title">{"User View"}</DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title">{"Tickets"}</DialogTitle>
         <DialogContent>
-          <form className={classes.container}  >
+          <Table stickyHeader aria-label="sticky table">
+            <TableHead>
+              <TableRow selected={true}>
+                {ticketColumns.map((column) => (
+                  <TableCell
+                    key={column._id}
+                    align={column.align}
+                    style={{ minWidth: column.minWidth }}
+                  >
+                    {column.label}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {/* {tickets.length > 0} */}
+              {tickets.length > 0 ? tickets.map((row) => {
+                return (
+                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code} onClick={() => rowClick(row)}>
+                    {ticketColumns.map((column) => {
+                      const value = row[column.id];
+                      return (
+                        <TableCell key={column.id} align={column.align}>
+                          {column.format && typeof value === 'number' ? value : value}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                );
+              }): <TableRow>
+                <TableCell>  </TableCell>
+                <TableCell style={{textAlign: 'center'}}> No Data </TableCell>
+                <TableCell>  </TableCell>
+                </TableRow>}
+            </TableBody>
+          </Table>
+          {/* <form className={classes.container}  >
             <TextField
               name={'email'}
               value={editData.email}
@@ -184,17 +239,17 @@ export default function StickyHeadTable() {
                 return {...prevState, [e.target.name]:e.target.value}
               })}
             />
-          </form>
+          </form> */}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => updateUser({ ...editData })} color="primary">
+          {/* <Button onClick={() => updateUser({ ...editData })} color="primary">
             Update
-          </Button>
-          <Button onClick={changeReadonly} color="primary">
+          </Button> */}
+          {/* <Button onClick={changeReadonly} color="primary">
             Edit
-          </Button>
+          </Button> */}
           <Button onClick={handleClose} color="primary">
-            Cancel
+            Close
           </Button>
         </DialogActions>
       </Dialog>
