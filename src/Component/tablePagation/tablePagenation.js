@@ -93,14 +93,14 @@ export default function StickyHeadTable() {
   }, [rowsPerPage]);
   // popup
   const updateUser = async (payload) => {
-    console.log('payload', payload)
+    console.log('payload:', payload)
     let { data } = await Axios.patch(`${URL}/api/v1/user/${payload._id}`, {
       data: {
         attributes: {
           email: payload.email,
           name: payload.name,
           mobile: payload.mobile,
-
+          is_active:payload.active,
         }
       }
     });
@@ -224,46 +224,12 @@ export default function StickyHeadTable() {
 
               <br />
               Active : &nbsp;&nbsp;&nbsp;
-            <Select
-                name={'active'}
-                value={editData.active}
-                InputProps={{
-                  readOnly: readOnly
-                }}
-                onInput={e => setEditData(prevState => {
+              <Select name={'active'} onInput={e => setEditData(prevState => {
                   return { ...prevState, [e.target.name]: e.target.value }
-                })}
-              />
-
-              <FormControl className={classes.formControl}>
-                <InputLabel htmlFor="grouped-native-select">Grouping</InputLabel>
-                <Select native defaultValue="" id="grouped-native-select">
-                  <option aria-label="None" value="" />
-                  <optgroup label="Category 1">
-                    <option value={1}>Option 1</option>
-                    <option value={2}>Option 2</option>
-                  </optgroup>
-                  <optgroup label="Category 2">
-                    <option value={3}>Option 3</option>
-                    <option value={4}>Option 4</option>
-                  </optgroup>
-                </Select>
-              </FormControl>
-              <FormControl className={classes.formControl}>
-                <InputLabel htmlFor="grouped-select">Grouping</InputLabel>
-                <Select defaultValue="" id="grouped-select">
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <ListSubheader>Category 1</ListSubheader>
-                  <MenuItem value={1}>Option 1</MenuItem>
-                  <MenuItem value={2}>Option 2</MenuItem>
-                  <ListSubheader>Category 2</ListSubheader>
-                  <MenuItem value={3}>Option 3</MenuItem>
-                  <MenuItem value={4}>Option 4</MenuItem>
-                </Select>
-              </FormControl>
-
+                })}>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </Select>
             </form>
           </DialogContent>
           <DialogActions>

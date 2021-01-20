@@ -22,10 +22,12 @@ class Dasdboard extends Component {
 
     handleUserNameSelection = event => {
         this.setState({ userName: event.target.value, controll: false })
+        this.remove()
     }
 
     handleShowTimeSelection = (event) => {
         this.setState({ showTime: event.target.value, controll: false })
+        this.remove()
     }
 
     dataPicker = (event) => {
@@ -35,9 +37,9 @@ class Dasdboard extends Component {
 
     remove() {
         var array = this.state.response
-        array.splice(array.length, 1)
-
-        console.log("Array:", array)
+        console.log("Count:",array)
+        array.splice(0,array.length);
+        this.setState({respone:array,excess:0,balance:0})
     }
 
     componentDidMount() {
@@ -63,9 +65,8 @@ class Dasdboard extends Component {
                     }
                 }
             })
-            if (this.state.showTime != 'All') assignData['show_time'] = this.state.showTime
-            let assignData = data.data.attributes;
-
+           
+            if (this.state.showTime != 'All') data.data.attributes['show_time'] = this.state.showTime
             if (!this.state.controll) {
                 Axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/v1/purchase/dashboard`, data).then((response) => {
 

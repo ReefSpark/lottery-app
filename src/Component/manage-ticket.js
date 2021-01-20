@@ -20,7 +20,8 @@ class ManageTicket extends Component {
             ticketNumberPriceError: '',
             ticketNameError: '',
             priceError: '',
-            values: [{}]
+            values: [{}],
+            pagenation:true
         }
     }
     handleNameText = event => {
@@ -30,7 +31,7 @@ class ManageTicket extends Component {
         this.setState({ price: event.target.value })
     }
     handleQuantitySelection = event => {
-        
+
         this.setState({ quantity: event.target.value })
     }
     handleText = (i, event) => {
@@ -69,6 +70,7 @@ class ManageTicket extends Component {
         }
         return true
     }
+    
     purchaseSumbit = () => {
         const isValid = this.validate();
         console.log(isValid)
@@ -78,22 +80,23 @@ class ManageTicket extends Component {
             let ticketNumberPriceCount = this.state.ticketNumberPrice
             while (i < ticketNumberCount.length) {
                 this.state.values[i] = {
-                    ticket_name: this.state.ticketName,
-                    price: this.state.price,
-                    ticket_number: ticketNumberCount[i],
-                    ticket_price: ticketNumberPriceCount[i],
+                    combination: ticketNumberCount[i].toUpperCase(),
+                    prize: Number(ticketNumberPriceCount[i]),
                 }
                 this.setState({ values: this.state.values })
                 i++
             }
             let data = Object.assign({
                 data: {
-                    attributes: this.state.values
+                    attributes: [
+                        {name:this.state.ticketName.toUpperCase(), price:Number(this.state.price)},
+                        this.state.values]
+
                 }
             })
-            return Axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/v1/purchase/${this.state.userName}`, data).then((response) => {
+            return Axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/v1/master`, data).then((response) => {
                 if (response.status === 200)
-                    this.setState({ message: response.data.data.attributes.message })
+                    this.setState({ message: response.data.data.attributes.message,pagenation:false })
                 toast.success(this.state.message);
             }).catch((err) => {
                 if (err.response.status === 400) {
@@ -103,6 +106,7 @@ class ManageTicket extends Component {
             });
         }
     }
+    
 
     render() {
         var fieldsArray = [];
@@ -172,14 +176,14 @@ class ManageTicket extends Component {
                             </div>
 
                             <div className="col">
-                                <label className="form-label" >Price *</label>
+                                <label className="form-label" >Prize *</label>
                             </div>
 
                         </div>
                         {fieldsArray}
                     </div>
                     <div className="button-ticket">
-                        <button className="btn  add-user-button" onClick={this.purchaseSumbit}>Purchase</button>
+                        <button className="btn  add-user-button" onClick={this.purchaseSumbit}>Add</button>
                         <button className="btn  add-user-button" onClick={this.removeSumbit}>Remove Action</button>
                     </div>
                     < ToastContainer
@@ -187,6 +191,8 @@ class ManageTicket extends Component {
                         autoClose={3000} />
                     <div className="seprate-line">
                     </div>
+                    <br></br>
+                    <h4>Ticket Master List</h4>
                     <Pagenation callChild={this.state.pagenation} />
 
                 </div>

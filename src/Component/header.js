@@ -17,7 +17,7 @@ import ManageTickes from './manage-ticket'
 export default function header() {
     
     const logout = () => {        
-        history.push('/login')
+        history.push('/')
     }
 
     return (
