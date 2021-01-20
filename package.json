@@ -25,8 +25,8 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "REACT_APP_API_BASE_URL=http://14778d481397.ngrok.io react-scripts start",
-    "build": "REACT_APP_API_BASE_URL=http://14778d481397.ngrok.io react-scripts build",
+    "start": "REACT_APP_API_BASE_URL=http://68.183.247.206:5000 react-scripts start",
+    "build": "REACT_APP_API_BASE_URL=http://68.183.247.206:5000 react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
