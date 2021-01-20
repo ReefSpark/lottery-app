@@ -21,15 +21,23 @@ class Dasdboard extends Component {
     }
 
     handleUserNameSelection = event => {
-        this.setState({ userName: event.target.value })
+        this.setState({ userName: event.target.value, controll: false })
     }
 
     handleShowTimeSelection = (event) => {
-        this.setState({ showTime: event.target.value })
+        this.setState({ showTime: event.target.value, controll: false })
     }
 
     dataPicker = (event) => {
-        this.setState({ date: event })
+        this.setState({ date: event, controll: false })
+        this.remove()
+    }
+
+    remove() {
+        var array = this.state.response
+        array.splice(array.length, 1)
+
+        console.log("Array:", array)
     }
 
     componentDidMount() {
@@ -45,7 +53,7 @@ class Dasdboard extends Component {
 
     }
     componentDidUpdate() {
-        let i=0;
+        let i = 0;
         if (this.state.userName != '') {
             let data = Object.assign({
                 data: {
@@ -55,43 +63,37 @@ class Dasdboard extends Component {
                     }
                 }
             })
-
+            if (this.state.showTime != 'All') assignData['show_time'] = this.state.showTime
             let assignData = data.data.attributes;
-            this.state.showTime != 'All' ? assignData['show_time'] = this.state.showTime :
-                Axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/v1/purchase/dashboard`, data).then((response) => {
-                    response = {
-                        "data": [
-                            { "qty": 3, "value": 270, "date": "2021-01-10T17:38:19.814Z", "rate": 90, "name": "Dubai" },
-                            { "qty": 4, "value": 500, "date": "2021-01-10T17:38:19.814Z", "rate": 50, "name": "SARII3" },
-                        ], "excess": 0, "balance": 0
-                    }
-                    
-                    if (!this.state.controll) {
-                        console.log("Helllo")
-                        while(i<response.data.length){
-                        
-                            i++;
-                        }
-                        this.setState({ response: response.data, excess: response.excess, balance: response.balance, controll: true })
 
+            if (!this.state.controll) {
+                Axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/v1/purchase/dashboard`, data).then((response) => {
+
+                    let res = response.data.data;
+                    while (i < res.length) {
+                        this.state.response[i] = {
+                            sno: i + 1,
+                            name: res[i].name,
+                            qty: res[i].qty,
+                            value: res[i].value,
+                            rate: res[i].rate
+                        }
+                        this.setState({ respone: this.state.response })
+                        i++;
                     }
+                    this.setState({ excess: response.data.excess, balance: response.data.balance, controll: true })
+
+
 
                 }).catch((err) => {
                 });
+            }
         }
 
 
     }
 
     render() {
-        let data = {
-            "data": [
-                { "qty": 3, "value": 270, "date": "2021-01-10T17:38:19.814Z", "rate": 90, "name": "Dubai" },
-                { "qty": 4, "value": 500, "date": "2021-01-10T17:38:19.814Z", "rate": 50, "name": "SARII3" },
-            ], "excess": 0, "balance": 0
-        }
-        let i=0;
-        console.log("Dataaa:",data)
         return (
             <div className="start">
                 <div className="user-status">
@@ -147,15 +149,18 @@ class Dasdboard extends Component {
                         <tbody>
 
                             {
-                                // data.map((value) => {
-                                //     <tr>
-                                //         <th scope="row">1</th>
-                                //         <td>{value.name}</td>
-                                //         <td>{value.qty}</td>
-                                //         <td>{value.rate}</td>
-                                //         <td>{value.value}</td>
-                                //     </tr>
-                                // })
+
+                                this.state.response.map((value) => {
+                                    return (<tr>
+                                        <th scope="row">{value.sno}</th>
+                                        <td>{value.name}</td>
+                                        <td>{value.qty}</td>
+                                        <td>{value.rate}</td>
+                                        <td>{value.value}</td>
+                                    </tr>)
+
+                                })
+
                             }
 
 

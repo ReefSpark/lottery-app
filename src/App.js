@@ -30,7 +30,7 @@ function App() {
                     )
                 }}
               /> */}
-          <Route exact path="/login" component={Login} />
+          <Route exact path="/" component={Login} />
           <Route exact path="/dashboard" component={Dashboard} />
           <Route exact path="/users" component={Dashboard} />
           <Route exact path="/manage-tickets" component={Dashboard} />

@@ -52,9 +52,9 @@ class PurchaseTicket extends Component {
         }).catch((err) => {
         });
     }
-    componentDidUpdate() {
-        this.setState({ quantity: 0 })
-    }
+    // componentDidUpdate() {
+    //     this.setState({ quantity: 0 })
+    // }
 
     handleUserNameSelection = event => {
         this.setState({ userName: event.target.value })
