@@ -88,8 +88,8 @@ class PurchaseTicket extends Component {
     }
 
     removeSumbit = () => {
-        let count = this.state.quantity;
-        this.setState({ quantity: --count })
+        this.fieldsArray.splice(this.fieldsArray.length-1,1)
+        this.setState({ quantity:0})
     }
     purchaseSumbit = () => {
         const isValid = this.validate();

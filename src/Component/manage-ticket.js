@@ -44,8 +44,8 @@ class ManageTicket extends Component {
         this.setState({ ticketNumberPrice: this.state.ticketNumberPrice })
     }
     removeSumbit = () => {
-        let count = this.state.quantity;
-        this.setState({ quantity: --count })
+        this.fieldsArray.splice(this.fieldsArray.length-1,1)
+        this.setState({ quantity:0})
     }
     // componentWillUpdate(){
     //     this.setState({quantity:0})
