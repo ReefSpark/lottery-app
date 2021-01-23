@@ -45,7 +45,8 @@ const ticketColumns = [
 ]
 const useStyles = makeStyles({
   root: {
-    width: '100%',
+    width: '80%',
+    margin: `3% 0 0 10%`,
   },
   container: {
     maxHeight: 440,

@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import "./style-sheet/dashboard.css"
 import history from "../history";
-import DatePicker from 'react-date-picker';
 import Axios from 'axios';
+import { DatePicker, Space } from 'antd';
 import moment from 'moment-timezone'
 class Dasdboard extends Component {
     constructor(props) {
@@ -30,8 +30,8 @@ class Dasdboard extends Component {
         this.remove()
     }
 
-    dataPicker = (event) => {
-        this.setState({ date: event, controll: false })
+    dataPicker = (date,datestring) => {
+        this.setState({ date: datestring, controll: false })
         this.remove()
     }
 
@@ -111,20 +111,17 @@ class Dasdboard extends Component {
                         <div className="col">
                             <div className="form-outline">
                                 <label className="form-label">DatePicker </label>
-                                <DatePicker className="picker-form-control"
-                                    onChange={this.dataPicker}
-                                    value={this.state.date}
-                                />
+                                <DatePicker  className="form-control" defaultValue={moment(new Date, 'YYYY-MM-DD')} format={'YYYY-MM-DD'} onChange={this.dataPicker} />
                             </div>
                         </div>
                         <div className="col">
                             <div className="form-outline">
                                 <label className="form-label">Show Time *</label>
                                 <select className="form-control" value={this.state.showTime} onChange={this.handleShowTimeSelection}>
-                                    <option>11:00</option>
-                                    <option> 14:00</option>
-                                    <option> 17:00 </option>
-                                    <option> 20:00 </option>
+                                    <option>11:00 AM</option>
+                                    <option> 02:00 AM</option>
+                                    <option> 05:00 PM</option>
+                                    <option> 08:00 PM </option>
                                     <option> All </option>
                                 </select>
 

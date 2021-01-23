@@ -2,9 +2,10 @@
 import './App.css';
 import Login from './Component/login'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'antd/dist/antd.css';
 import history from './history';
 import Dashboard from './Component/header'
-import User from './Component/header'
+import ViewTicket from './Component/viewTickets'
 import {
   BrowserRouter as Router,
   Switch,
@@ -35,6 +36,7 @@ function App() {
           <Route exact path="/users" component={Dashboard} />
           <Route exact path="/manage-tickets" component={Dashboard} />
           <Route exact path="/purchase-ticket" component={Dashboard} />
+          <Route exact path="/view-ticket" component={ViewTicket} />
         </Router>
       </Switch>
 

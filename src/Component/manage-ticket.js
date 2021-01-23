@@ -4,8 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Axios from 'axios'
 import './style-sheet/manage-tickets.css'
-import Pagenation from './tablePagation/manageTicketPagenation'
-
+import history from '../history';
 class ManageTicket extends Component {
     constructor(props) {
         super(props)
@@ -21,8 +20,9 @@ class ManageTicket extends Component {
             ticketNameError: '',
             priceError: '',
             values: [{}],
-            pagenation:true
+            pagenation: true
         }
+        this.fieldsArray=[]
     }
     handleNameText = event => {
         this.setState({ ticketName: event.target.value })
@@ -70,7 +70,11 @@ class ManageTicket extends Component {
         }
         return true
     }
-    
+    viewTicket = () => {
+        console.log("View Ticket");
+        history.push('/view-ticket')
+    }
+
     purchaseSumbit = () => {
         const isValid = this.validate();
         console.log(isValid)
@@ -89,14 +93,14 @@ class ManageTicket extends Component {
             let data = Object.assign({
                 data: {
                     attributes: [
-                        {name:this.state.ticketName.toUpperCase(), price:Number(this.state.price)},
+                        { name: this.state.ticketName.toUpperCase(), price: Number(this.state.price) },
                         this.state.values]
 
                 }
             })
             return Axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/v1/master`, data).then((response) => {
                 if (response.status === 200)
-                    this.setState({ message: response.data.data.attributes.message,pagenation:false })
+                    this.setState({ message: response.data.data.attributes.message, pagenation: false })
                 toast.success(this.state.message);
             }).catch((err) => {
                 if (err.response.status === 400) {
@@ -106,13 +110,13 @@ class ManageTicket extends Component {
             });
         }
     }
-    
+
 
     render() {
-        var fieldsArray = [];
         let count = this.state.quantity;
-        for (let i = 0; i <= count; i++) {
-            fieldsArray.push(
+        console.log("count:",count)
+        for (let i = 0; i < count; i++) {
+            this.fieldsArray.push(
                 <div className="row loop-array">
                     <div className="col">
                         <div className="form-outline">
@@ -180,20 +184,24 @@ class ManageTicket extends Component {
                             </div>
 
                         </div>
-                        {fieldsArray}
+                        <div>
+                        {this.fieldsArray}
+                        </div>
+                    
                     </div>
                     <div className="button-ticket">
                         <button className="btn  add-user-button" onClick={this.purchaseSumbit}>Add</button>
+                        <button className="btn  add-user-button" onClick={this.viewTicket}>View Ticket</button>
                         <button className="btn  add-user-button" onClick={this.removeSumbit}>Remove Action</button>
                     </div>
                     < ToastContainer
-                        position="bottom-right"
+                        position="top-right"
                         autoClose={3000} />
                     <div className="seprate-line">
                     </div>
                     <br></br>
-                    <h4>Ticket Master List</h4>
-                    <Pagenation callChild={this.state.pagenation} />
+                    {/* <h4>Ticket Master List</h4>
+                    <Pagenation callChild={this.state.pagenation} /> */}
 
                 </div>
             </div>

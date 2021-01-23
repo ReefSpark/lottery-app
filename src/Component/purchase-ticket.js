@@ -23,7 +23,7 @@ class PurchaseTicket extends Component {
             message: '',
             values: [{}]
         }
-
+        this.fieldsArray=[];
     }
     validate = () => {
         let ticketNumberError = '', sellingPriceError = ''
@@ -125,18 +125,13 @@ class PurchaseTicket extends Component {
                     this.setState({ message: err.response.data.data.attributes.message })
                     return toast.error(this.state.message);
                 }
-
-
             });
         }
-
-
     }
 
     render() {
-        var fieldsArray = [];
         for (let i = 0; i <= this.state.quantity; i++) {
-            fieldsArray.push(
+            this.fieldsArray.push(
                 <div className="row loop-array">
                     <div className="col">
                         <div className="form-outline">
@@ -193,10 +188,10 @@ class PurchaseTicket extends Component {
                     <div className="form-outline">
                         <label className="form-label">Show Time *</label>
                         <select className="form-controls" value={this.state.showTime} onChange={this.handleShowTimeSelection}>
-                            <option>11:00</option>
-                            <option> 14:00</option>
-                            <option> 17:00 </option>
-                            <option> 20:00 </option>
+                            <option> 11:00 AM</option>
+                            <option> 02:00 AM</option>
+                            <option> 05:00 PM</option>
+                            <option> 08:00 PM </option>
                         </select>
 
                     </div>
@@ -217,14 +212,17 @@ class PurchaseTicket extends Component {
                         </div>
 
                     </div>
-                    {fieldsArray}
+                    <div>
+                        {this.fieldsArray}
+                    </div>
+                    
                 </div>
                 <div className="button-ticket">
                     <button className="btn  add-user-button" onClick={this.purchaseSumbit}>Purchase</button>
                     <button className="btn  add-user-button" onClick={this.removeSumbit}>Remove Action</button>
                 </div>
                 < ToastContainer
-                    position="bottom-right"
+                    position="top-right"
                     autoClose={3000} />
             </div>
         )

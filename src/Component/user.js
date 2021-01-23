@@ -18,7 +18,7 @@ class user extends Component {
             emailError: '',
             phoneError: '',
             message: '',
-            searchName:"",
+            searchName: "",
             pagenation: false,
             notSearch: false,
         }
@@ -53,7 +53,7 @@ class user extends Component {
     handleSelection = (event) => {
         this.setState({ gender: event.target.value })
     }
-    handleSearch=(event)=>{
+    handleSearch = (event) => {
         this.setState({ searchName: event.target.value })
     }
 
@@ -73,6 +73,7 @@ class user extends Component {
             return Axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user`, data).then((response) => {
                 this.setState({ message: response.data.data.attributes.message, pagenation: true })
                 toast.success(this.state.message);
+                <Pagenation callChild={this.state.pagenation} />
             }).catch((err) => {
                 this.setState({ message: err.response.data.data.attributes.message })
                 return toast.error(this.state.message);
@@ -145,13 +146,13 @@ class user extends Component {
                 <div className="user-list">
                     <h3>User Lists</h3>
                     <div className="search-box">
-                        <input type="text" className="form-control search-text-controll" placeholder="Enter name..." onChange={this.handleSearch}/>
+                        <input type="text" className="form-control search-text-controll" placeholder="Enter name..." onChange={this.handleSearch} />
                         <input type="submit" id="form8Example3" className="form-control search-button-controll" value="Search" onClick={this.searchSumbit} />
                     </div>
                 </div>
 
                 < ToastContainer
-                    position="bottom-right"
+                    position="top-right"
                     autoClose={3000} />
                 {!this.state.notSearch && (<Pagenation callChild={this.state.pagenation} />)}
                 {this.state.notSearch && (<SearchPagenation searchName={this.state.searchName} />)}

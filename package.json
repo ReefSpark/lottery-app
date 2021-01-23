@@ -7,6 +7,7 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "antd": "^4.9.1",
     "axios": "^0.21.1",
     "bootstrap": "^4.5.3",
     "dotenv": "^8.2.0",
@@ -25,8 +26,8 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "REACT_APP_API_BASE_URL=http://68.183.247.206:5000 react-scripts start",
-    "build": "REACT_APP_API_BASE_URL=http://68.183.247.206:5000 react-scripts build",
+    "start": "REACT_APP_API_BASE_URL=http://8d70e7f21ce8.ngrok.io react-scripts start",
+    "build": "REACT_APP_API_BASE_URL=http://8d70e7f21ce8.ngrok.io react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

@@ -1,4 +1,6 @@
 .main {
+    width: 100%;
+    margin:auto;
     display: flex;
     background-color: black;
     justify-content: space-between;
@@ -7,6 +9,7 @@
 ul {
     list-style-type: none;
 }
+
 
 
 li {

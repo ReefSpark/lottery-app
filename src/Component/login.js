@@ -13,7 +13,10 @@ class Login extends Component {
             email: "",
             password: "",
             message: "",
-            enable: true
+            emailError:'',
+            passwordError:'',
+            enable: true,
+            disable:false
         }
     }
 
@@ -25,16 +28,16 @@ class Login extends Component {
     }
 
     validate = () => {
-        let emailerror = '';
-        let passworderror = '';
-        if (!this.state.password) {
-            passworderror = "password cannot be blank"
+        let emailError = '';
+        let passwordError = '';
+        if (this.state.password === '') {
+            passwordError = "Name cannot be blank"
         }
-        if (!this.state.email.includes("@")) {
-            emailerror = 'Enter valid email'
+        if (this.state.email.indexOf('@') < 0) {
+            emailError = "Enter vaild email"
         }
-        if (emailerror || passworderror) {
-            this.setState({ emailerror: emailerror, passworderror: passworderror })
+        if (emailError || passwordError) {
+            this.setState({ emailError: emailError, passwordError: passwordError })
             return false
         }
         return true
@@ -48,18 +51,17 @@ class Login extends Component {
     async getReponse() {
         const isValid = this.validate();
         if (isValid) {
-            return Axios.post('http://d3e6edc66610.ngrok.io/api/v1/user/login', { data: { attributes: { email: this.state.email, password: this.state.password } } }).then((response) => {
+            return Axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/login`, { data: { attributes: { email: this.state.email, password: this.state.password } } }).then((response) => {
                 this.setState({ message: response.data.data.attributes.message })
                 console.log(response.data.data.attributes.message)
                 toast.success(this.state.message);
-                localStorage.setItem('token', 'user');
+                //localStorage.setItem('token', 'user');
             }).catch((err) => {
                 this.setState({ message: err.response.data.data.attributes.message })
                 return toast.error(this.state.message);
 
             });
         }
-
 
 
     }
@@ -71,13 +73,19 @@ class Login extends Component {
                 <div className="login-phase">
                     <div className="login-controll">
                         <input type="text" placeholder="Email" value={this.state.email} onChange={this.handleText} /><br></br>
+                        {this.state.emailError && (<div style={{ "color": "red", "fontSize": "12px" }}>
+                                    {this.state.emailError}
+                                </div>)}
                         <input type="password" placeholder="Password" value={this.state.password} onChange={this.handlePasswordText} /><br></br>
+                        {this.state.passwordError && (<div style={{ "color": "red", "fontSize": "12px" }}>
+                                    {this.state.passwordError}
+                                </div>)}
                         <button type="button" className="btn btn-primary btn-lg " id="load1" data-loading-text="<i className='fa fa-circle-o-notch fa-spin'></i> Processing Order" onClick={this.loginSumbit}>Login</button>
                     </div>
 
                 </div>
                 < ToastContainer
-                    position="bottom-right"
+                    position="top-right"
                     autoClose={3000} />
 
             </div>
