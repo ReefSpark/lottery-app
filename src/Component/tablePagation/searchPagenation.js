@@ -103,7 +103,7 @@ export default function StickyHeadTable(props) {
             email: payload.email,
             name:payload.name,
             mobile:payload.mobile,
-            is_active:"Active"
+            is_active: payload.active,
 
         }
       }
@@ -228,20 +228,18 @@ export default function StickyHeadTable(props) {
  
           <br />	
               Active : &nbsp;&nbsp;&nbsp;
-            <Select
-              name={'is_active'}
-              value={editData.active}
-              InputProps={{
-                readOnly: readOnly
-              }}
-              onInput={e => setEditData(prevState => {
-                return { ...prevState, [e.target.name]: e.target.value }
-              })}
-            />
+              <Select name={'active'} onChange={e => setEditData(prevState => {
+              return { ...prevState, [e.target.name]: e.target.value }
+            })} inputProps={{
+              readOnly: readOnly
+            }} >
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </Select>
           </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => updateUser({ ...editData })} color="primary">
+          <Button onClick={() => updateUser({ ...editData })} disabled={readOnly} color="primary">
             Update
           </Button>
           <Button onClick={changeReadonly} color="primary">
