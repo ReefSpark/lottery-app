@@ -79,8 +79,6 @@ class ManageTicket extends Component {
     purchaseSumbit = () => {
         this.setState({quantity:0})
         const isValid = this.validate();
-   
-       
         if (isValid) {
            
             let i = 0;
@@ -119,7 +117,6 @@ class ManageTicket extends Component {
 
     render() {
         let count = this.state.quantity;
-        
         for (let i = 0; i < count; i++) {
             console.log(this.state.ticketNameError)
             this.fieldsArray.push(

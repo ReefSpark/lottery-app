@@ -7,11 +7,11 @@ import moment from 'moment-timezone'
 class Dasdboard extends Component {
     constructor(props) {
         super(props)
-
+        this.today = moment().format('YYYY-MM-DD')
         this.state = {
             userNames: [],
             userName: "",
-            date: new Date(),
+            date:this.today,
             showTime: "All",
             excess: 0,
             response: [{}],
@@ -111,7 +111,7 @@ class Dasdboard extends Component {
                         <div className="col">
                             <div className="form-outline">
                                 <label className="form-label">DatePicker </label>
-                                <DatePicker  className="form-control" defaultValue={moment(new Date, 'YYYY-MM-DD')} format={'YYYY-MM-DD'} onChange={this.dataPicker} />
+                                <DatePicker  className="form-control" defaultValue={moment(this.today,'YYYY-MM-DD')} format={'YYYY-MM-DD'} onChange={this.dataPicker} />
                             </div>
                         </div>
                         <div className="col">

@@ -43,13 +43,13 @@ class PurchaseTicket extends Component {
     componentDidMount() {
 
         Axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user`).then((response) => {
-
-            this.setState({ userNames: response.data.data.attributes.data, userName: response.data.data.attributes.data[0]._id })
+            this.setState({ userNames: response.data.data.attributes.data, userName: response.data.data.attributes.data[0]._id})
 
         }).catch((err) => {
         });
         Axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/master`).then((response) => {
             this.setState({ ticketNames: response.data.data.attributes.data, actualPrice: response.data.data.attributes.data[0].price, ticketName: response.data.data.attributes.data[0]._id })
+            this.loopTicketFunction(1)
         }).catch((err) => {
         });
     }
@@ -73,10 +73,10 @@ class PurchaseTicket extends Component {
     }
     handleQuantitySelection = event => {
         this.setState({ quantity: event.target.value })
-        event.target.value = 0;
+        this.loopTicketFunction(event.target.value);
+        event.target.value=0;
     }
     handleShowTimeSelection = event => {
-
         this.setState({ showTime: event.target.value, quantity: 0 })
     }
     handleText = (i, event) => {
@@ -96,7 +96,6 @@ class PurchaseTicket extends Component {
     purchaseSumbit = () => {
         this.setState({ quantity: 0 })
         const isValid = this.validate();
-        console.log(isValid)
         if (isValid) {
             let i = 0;
             let ticketNumberCount = this.state.ticketNumber
@@ -119,7 +118,6 @@ class PurchaseTicket extends Component {
                     attributes: this.state.values
                 }
             })
-            console.log("Data:", data)
             return Axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/v1/purchase/${this.state.userName}`, data).then((response) => {
                 if (response.status === 200)
                     this.setState({ message: response.data.data.attributes.message })
@@ -133,8 +131,9 @@ class PurchaseTicket extends Component {
         }
     }
 
-    render() {
-        for (let i = 0; i < this.state.quantity; i++) {
+    loopTicketFunction(count){
+
+        for (let i = 0; i < count; i++) {
             this.fieldsArray.push(
                 <div className="row loop-array">
                     <div className="col">
@@ -165,6 +164,10 @@ class PurchaseTicket extends Component {
             );
             this.inc++;
         }
+    }
+
+    render() {
+       
         return (
             <div>
                 <h1 style={{ "marginTop": "3%" }}>Purchase Ticket</h1>
