@@ -77,6 +77,12 @@ export default function StickyHeadTable(props) {
     console.log(data.data.attributes.data)
     setRow(data.data.attributes.data);
   }, []);
+
+  useEffect(async () => {
+    let { data } = await Axios.get(`${URL}/api/v1/user?name=${props.searchName}&page_no=${page}&limit=${rowsPerPage}`);
+    console.log(data.data.attributes.data)
+    setRow(data.data.attributes.data);
+  }, [props.searchName]);
   // our custom function
   const userPagination = async (event, something) => {
     let { data } = await Axios.get(`${URL}/api/v1/user?name=${props.searchName}&page_no=${something}&limit=${rowsPerPage}`);
@@ -102,7 +108,6 @@ export default function StickyHeadTable(props) {
         }
       }
     });
-    console.log('update data result', data);
     userPagination(rowsPerPage, 0)
     setOpen(false);
     setReadOnly(true);

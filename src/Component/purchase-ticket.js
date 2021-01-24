@@ -13,7 +13,7 @@ class PurchaseTicket extends Component {
             ticketNames: [],
             userName: "",
             ticketName: '',
-            quantity: 0,
+            quantity: 1,
             showTime: '11:00',
             actualPrice: 0,
             ticketNumber: [],
@@ -23,7 +23,8 @@ class PurchaseTicket extends Component {
             message: '',
             values: [{}]
         }
-        this.fieldsArray=[];
+        this.fieldsArray = [];
+        this.inc = 0;
     }
     validate = () => {
         let ticketNumberError = '', sellingPriceError = ''
@@ -57,10 +58,9 @@ class PurchaseTicket extends Component {
     // }
 
     handleUserNameSelection = event => {
-        this.setState({ userName: event.target.value })
+        this.setState({ userName: event.target.value, quantity: 0 })
     }
     handleTicketSelection = event => {
-
         let i = 0;
         let ticketIndex = this.state.ticketNames;
         while (i < ticketIndex.length) {
@@ -69,29 +69,32 @@ class PurchaseTicket extends Component {
             }
             i++;
         }
+        this.setState({ quantity: 0 })
     }
     handleQuantitySelection = event => {
         this.setState({ quantity: event.target.value })
+        event.target.value = 0;
     }
     handleShowTimeSelection = event => {
 
-        this.setState({ showTime: event.target.value })
+        this.setState({ showTime: event.target.value, quantity: 0 })
     }
     handleText = (i, event) => {
         this.state.ticketNumber[i] = event.target.value.toUpperCase()
-        this.setState({ ticketNumber: this.state.ticketNumber })
+        this.setState({ ticketNumber: this.state.ticketNumber, quantity: 0 })
     }
 
     handleSellingPrice = (i, event) => {
         this.state.sellingPrice[i] = event.target.value.toUpperCase()
-        this.setState({ sellingPrice: this.state.sellingPrice })
+        this.setState({ sellingPrice: this.state.sellingPrice, quantity: 0 })
     }
 
     removeSumbit = () => {
-        this.fieldsArray.splice(this.fieldsArray.length-1,1)
-        this.setState({ quantity:0})
+        this.fieldsArray.splice(this.fieldsArray.length - 1, 1)
+        this.setState({ quantity: 0 })
     }
     purchaseSumbit = () => {
+        this.setState({ quantity: 0 })
         const isValid = this.validate();
         console.log(isValid)
         if (isValid) {
@@ -116,6 +119,7 @@ class PurchaseTicket extends Component {
                     attributes: this.state.values
                 }
             })
+            console.log("Data:", data)
             return Axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/v1/purchase/${this.state.userName}`, data).then((response) => {
                 if (response.status === 200)
                     this.setState({ message: response.data.data.attributes.message })
@@ -130,12 +134,12 @@ class PurchaseTicket extends Component {
     }
 
     render() {
-        for (let i = 0; i <= this.state.quantity; i++) {
+        for (let i = 0; i < this.state.quantity; i++) {
             this.fieldsArray.push(
                 <div className="row loop-array">
                     <div className="col">
                         <div className="form-outline">
-                            <input type="text" id="form8Example1" className="form-control" onChange={this.handleText.bind(this, i)} />
+                            <input type="text" id="form8Example1" className="form-control" onChange={this.handleText.bind(this, this.inc)} />
                             {this.state.ticketNumberError && (<div style={{ "color": "red", "fontSize": "12px" }}>
                                 {this.state.ticketNumberError}
                             </div>)}
@@ -150,7 +154,7 @@ class PurchaseTicket extends Component {
                     </div>
                     <div className="col">
                         <div className="form-outline">
-                            <input type="email" id="form8Example2" className="form-control" onChange={this.handleSellingPrice.bind(this, i)} />
+                            <input type="email" id="form8Example2" className="form-control" onChange={this.handleSellingPrice.bind(this, this.inc)} />
                             {this.state.sellingPriceError && (<div style={{ "color": "red", "fontSize": "12px" }}>
                                 {this.state.sellingPriceError}
                             </div>)}
@@ -159,6 +163,7 @@ class PurchaseTicket extends Component {
                 </div>
 
             );
+            this.inc++;
         }
         return (
             <div>
@@ -215,7 +220,7 @@ class PurchaseTicket extends Component {
                     <div>
                         {this.fieldsArray}
                     </div>
-                    
+
                 </div>
                 <div className="button-ticket">
                     <button className="btn  add-user-button" onClick={this.purchaseSumbit}>Purchase</button>

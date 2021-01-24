@@ -36,3 +36,10 @@
     border-bottom: 1px solid gray;
 }
 
+.divide-button{
+    margin-top: 5%;
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    
+}

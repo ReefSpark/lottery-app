@@ -12,7 +12,7 @@ class ManageTicket extends Component {
         this.state = {
             ticketName: '',
             price: 0,
-            quantity: 0,
+            quantity: 1,
             ticketNumber: [],
             ticketNumberPrice: [],
             ticketNumberError: '',
@@ -20,32 +20,34 @@ class ManageTicket extends Component {
             ticketNameError: '',
             priceError: '',
             values: [{}],
-            pagenation: true
+            pagenation: true,
+            
         }
-        this.fieldsArray=[]
+        this.fieldsArray = [];
+        this.inc=0;
     }
     handleNameText = event => {
-        this.setState({ ticketName: event.target.value })
+        this.setState({ ticketName: event.target.value ,quantity: 0})
     }
     handlePriceText = event => {
-        this.setState({ price: event.target.value })
+        this.setState({ price: event.target.value ,quantity: 0})
     }
     handleQuantitySelection = event => {
-
-        this.setState({ quantity: event.target.value })
+        this.setState({ quantity: event.target.value})
+        event.target.value=0
     }
     handleText = (i, event) => {
         this.state.ticketNumber[i] = event.target.value.toUpperCase()
-        this.setState({ ticketNumber: this.state.ticketNumber })
+        this.setState({ ticketNumber: this.state.ticketNumber,quantity: 0 })
     }
 
     handleTicketNumberPrice = (i, event) => {
         this.state.ticketNumberPrice[i] = event.target.value.toUpperCase()
-        this.setState({ ticketNumberPrice: this.state.ticketNumberPrice })
+        this.setState({ ticketNumberPrice: this.state.ticketNumberPrice,quantity: 0})
     }
     removeSumbit = () => {
-        this.fieldsArray.splice(this.fieldsArray.length-1,1)
-        this.setState({ quantity:0})
+        this.fieldsArray.splice(this.fieldsArray - 1, 1)
+        this.setState({ quantity: 0 })
     }
     // componentWillUpdate(){
     //     this.setState({quantity:0})
@@ -62,7 +64,7 @@ class ManageTicket extends Component {
             ticketNameError = "Ticket name cannot be blank"
         }
         if (this.state.price === 0) {
-            priceError = "Price cannot be blank"
+            priceError = "Prize cannot be blank"
         }
         if (ticketNumberError || ticketNumberPriceError || ticketNameError || priceError) {
             this.setState({ ticketNumberError: ticketNumberError, ticketNumberPriceError: ticketNumberPriceError, ticketNameError: ticketNameError, priceError: priceError });
@@ -71,14 +73,16 @@ class ManageTicket extends Component {
         return true
     }
     viewTicket = () => {
-        console.log("View Ticket");
         history.push('/view-ticket')
     }
 
     purchaseSumbit = () => {
+        this.setState({quantity:0})
         const isValid = this.validate();
-        console.log(isValid)
+   
+       
         if (isValid) {
+           
             let i = 0;
             let ticketNumberCount = this.state.ticketNumber
             let ticketNumberPriceCount = this.state.ticketNumberPrice
@@ -97,7 +101,8 @@ class ManageTicket extends Component {
                         this.state.values]
 
                 }
-            })
+            });
+            console.log("Data:",data)
             return Axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/v1/master`, data).then((response) => {
                 if (response.status === 200)
                     this.setState({ message: response.data.data.attributes.message, pagenation: false })
@@ -114,13 +119,14 @@ class ManageTicket extends Component {
 
     render() {
         let count = this.state.quantity;
-        console.log("count:",count)
+        
         for (let i = 0; i < count; i++) {
+            console.log(this.state.ticketNameError)
             this.fieldsArray.push(
                 <div className="row loop-array">
                     <div className="col">
                         <div className="form-outline">
-                            <input type="text" id="form8Example1" className="form-control" onChange={this.handleText.bind(this, i)} />
+                            <input type="text" id="form8Example1" className="form-control" onChange={this.handleText.bind(this, this.inc)} />
                             {this.state.ticketNumberError && (<div style={{ "color": "red", "fontSize": "12px" }}>
                                 {this.state.ticketNumberError}
                             </div>)}
@@ -128,7 +134,7 @@ class ManageTicket extends Component {
                     </div>
                     <div className="col">
                         <div className="form-outline">
-                            <input type="email" id="form8Example2" className="form-control" onChange={this.handleTicketNumberPrice.bind(this, i)} />
+                            <input type="email" id="form8Example2" className="form-control" onChange={this.handleTicketNumberPrice.bind(this,this.inc)} />
                             {this.state.ticketNumberPriceError && (<div style={{ "color": "red", "fontSize": "12px" }}>
                                 {this.state.ticketNumberPriceError}
                             </div>)}
@@ -137,7 +143,7 @@ class ManageTicket extends Component {
                 </div>
 
             );
-
+                    this.inc++;
         }
         return (
             <div>
@@ -185,9 +191,9 @@ class ManageTicket extends Component {
 
                         </div>
                         <div>
-                        {this.fieldsArray}
+                            {this.fieldsArray}
                         </div>
-                    
+
                     </div>
                     <div className="button-ticket">
                         <button className="btn  add-user-button" onClick={this.purchaseSumbit}>Add</button>

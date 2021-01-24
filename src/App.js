@@ -6,6 +6,7 @@ import 'antd/dist/antd.css';
 import history from './history';
 import Dashboard from './Component/header'
 import ViewTicket from './Component/viewTickets'
+import ViewUsers from './Component/viewUsers'
 import {
   BrowserRouter as Router,
   Switch,
@@ -36,6 +37,7 @@ function App() {
           <Route exact path="/users" component={Dashboard} />
           <Route exact path="/manage-tickets" component={Dashboard} />
           <Route exact path="/purchase-ticket" component={Dashboard} />
+          <Route exact path="/view-users" component={ViewUsers} />
           <Route exact path="/view-ticket" component={ViewTicket} />
         </Router>
       </Switch>

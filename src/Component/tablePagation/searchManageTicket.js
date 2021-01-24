@@ -86,6 +86,15 @@ export default function StickyHeadTable(props) {
     setRow(data.data.attributes.data);
   }, []);
 
+  useEffect(async () => {
+
+    let { data } = await Axios.get(`${URL}/api/v1/master?name=${props.searchName}`);
+    // let { data } = await Axios.get(`${URL}/api/v1/user?page_no=${page}&limit=${rowsPerPage}`);
+    console.log(data.data.attributes.data)
+    setRow(data.data.attributes.data);
+  }, [props.searchName]);
+
+
 
   // our custom function
   const userPagination = async (event, something) => {

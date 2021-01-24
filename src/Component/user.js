@@ -3,8 +3,7 @@ import "./style-sheet/user.css"
 import Axios from 'axios'
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Pagenation from './tablePagation/tablePagenation'
-import SearchPagenation from './tablePagation/searchPagenation'
+import history from '../history';
 class user extends Component {
     constructor(props) {
         super(props)
@@ -57,6 +56,10 @@ class user extends Component {
         this.setState({ searchName: event.target.value })
     }
 
+    viewUser = () => {
+        history.push('/view-users')
+    }
+
     addUserSumbit = (event) => {
         const isValid = this.validate();
         if (isValid) {
@@ -73,7 +76,6 @@ class user extends Component {
             return Axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user`, data).then((response) => {
                 this.setState({ message: response.data.data.attributes.message, pagenation: true })
                 toast.success(this.state.message);
-                <Pagenation callChild={this.state.pagenation} />
             }).catch((err) => {
                 this.setState({ message: err.response.data.data.attributes.message })
                 return toast.error(this.state.message);
@@ -137,11 +139,12 @@ class user extends Component {
                             </div>
                         </div>
                     </div>
-                    <div>
+                    <div className="divide-button">
                         <button className="btn  add-user-button" onClick={this.addUserSumbit}>Add</button>
+                        <button className="btn  add-user-button" onClick={this.viewUser}>View User</button>
                     </div>
                 </div>
-                <div className="seprate-line">
+                {/* <div className="seprate-line">
                 </div>
                 <div className="user-list">
                     <h3>User Lists</h3>
@@ -149,13 +152,13 @@ class user extends Component {
                         <input type="text" className="form-control search-text-controll" placeholder="Enter name..." onChange={this.handleSearch} />
                         <input type="submit" id="form8Example3" className="form-control search-button-controll" value="Search" onClick={this.searchSumbit} />
                     </div>
-                </div>
+                </div> */}
 
                 < ToastContainer
                     position="top-right"
                     autoClose={3000} />
-                {!this.state.notSearch && (<Pagenation callChild={this.state.pagenation} />)}
-                {this.state.notSearch && (<SearchPagenation searchName={this.state.searchName} />)}
+                {/* {!this.state.notSearch && (<Pagenation callChild={this.state.pagenation} />)}
+                {this.state.notSearch && (<SearchPagenation searchName={this.state.searchName} />)} */}
 
             </div>
         )
