@@ -37,5 +37,13 @@
 }
 
 .loop-array{
-    margin-top:2%
+    display: flex;
+    flex-flow: row;
+    justify-content: space-around   
+}
+
+.user-button{
+    width: 10%;
+    background-color: black !important;
+    color:white !important;
 }

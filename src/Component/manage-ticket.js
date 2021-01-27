@@ -21,29 +21,29 @@ class ManageTicket extends Component {
             priceError: '',
             values: [{}],
             pagenation: true,
-            
+
         }
         this.fieldsArray = [];
-        this.inc=0;
+        this.inc = 0;
     }
     handleNameText = event => {
-        this.setState({ ticketName: event.target.value ,quantity: 0})
+        this.setState({ ticketName: event.target.value, quantity: 0 })
     }
     handlePriceText = event => {
-        this.setState({ price: event.target.value ,quantity: 0})
+        this.setState({ price: event.target.value, quantity: 0 })
     }
     handleQuantitySelection = event => {
-        this.setState({ quantity: event.target.value})
-        event.target.value=0
+        this.setState({ quantity: event.target.value })
+        this.loopTextFields(event.target.value)
     }
     handleText = (i, event) => {
         this.state.ticketNumber[i] = event.target.value.toUpperCase()
-        this.setState({ ticketNumber: this.state.ticketNumber,quantity: 0 })
+        this.setState({ ticketNumber: this.state.ticketNumber, quantity: 0 })
     }
 
     handleTicketNumberPrice = (i, event) => {
         this.state.ticketNumberPrice[i] = event.target.value.toUpperCase()
-        this.setState({ ticketNumberPrice: this.state.ticketNumberPrice,quantity: 0})
+        this.setState({ ticketNumberPrice: this.state.ticketNumberPrice, quantity: 0 })
     }
     removeSumbit = () => {
         this.fieldsArray.splice(this.fieldsArray - 1, 1)
@@ -54,19 +54,14 @@ class ManageTicket extends Component {
     // }
     validate = () => {
         let ticketNumberError = '', ticketNumberPriceError = '', ticketNameError = '', priceError = ''
-        if (this.state.ticketNumber.length === 0) {
-            ticketNumberError = "Ticket Number cannot be blank"
-        }
-        if (this.state.ticketNumberPrice.length === 0) {
-            ticketNumberPriceError = " Price cannot be blank"
-        }
+
         if (this.state.ticketName === '') {
             ticketNameError = "Ticket name cannot be blank"
         }
         if (this.state.price === 0) {
-            priceError = "Prize cannot be blank"
+            priceError = "Price cannot be blank"
         }
-        if (ticketNumberError || ticketNumberPriceError || ticketNameError || priceError) {
+        if (ticketNameError || priceError) {
             this.setState({ ticketNumberError: ticketNumberError, ticketNumberPriceError: ticketNumberPriceError, ticketNameError: ticketNameError, priceError: priceError });
             return false
         }
@@ -75,12 +70,22 @@ class ManageTicket extends Component {
     viewTicket = () => {
         history.push('/view-ticket')
     }
-
+    addItem = () => {
+        this.setState({ quantity: 1 })
+        this.loopTextFields(1);
+    }
+    removeSumbit = () => {
+        this.fieldsArray.splice(this.fieldsArray.length - 1, 1)
+        this.setState({})
+    }
     purchaseSumbit = () => {
-        this.setState({quantity:0})
+        this.setState({ quantity: 0 })
         const isValid = this.validate();
+        if (this.inc == 0) {
+            toast.error("Please Add Ticket Combination");
+        }
         if (isValid) {
-           
+
             let i = 0;
             let ticketNumberCount = this.state.ticketNumber
             let ticketNumberPriceCount = this.state.ticketNumberPrice
@@ -100,7 +105,6 @@ class ManageTicket extends Component {
 
                 }
             });
-            console.log("Data:",data)
             return Axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/v1/master`, data).then((response) => {
                 if (response.status === 200)
                     this.setState({ message: response.data.data.attributes.message, pagenation: false })
@@ -113,35 +117,41 @@ class ManageTicket extends Component {
             });
         }
     }
-
+    loopTextFields(count) {
+        for (let i = 0; i < count; i++) {
+            this.fieldsArray.push(
+                // <div className="row " style={{padding:"2%"}}>
+                //     <div className="col">
+                //         <div className="form-outline">
+                //             
+                //         </div>
+                //     </div>
+                //     <div className="col">
+                //         <div className="form-outline">
+                //             <input type="email" id="form8Example2" className="form-control" onChange={this.handleTicketNumberPrice.bind(this, this.inc)} />
+                //             {this.state.ticketNumberPriceError && (<div style={{ "color": "red", "fontSize": "12px" }}>
+                //                 {this.state.ticketNumberPriceError}
+                //             </div>)}
+                //         </div>
+                //     </div>
+                // </div>
+                <div className="loop-array" >
+                    <input type="text" id="form8Example1" className="form-control" style={{ marginTop: "1.5%", marginRight: "2%" }} onChange={this.handleText.bind(this, this.inc)} />
+                    {this.state.ticketNumberError && (<div style={{ "color": "red", "fontSize": "12px" }}>
+                        {this.state.ticketNumberError}
+                    </div>)}
+                    <input type="text" id="form8Example2" className="form-control"  style={{ marginTop: "1.5%", marginRight: "2%" }} onChange={this.handleTicketNumberPrice.bind(this, this.inc)} />
+                    {this.state.ticketNumberPriceError && (<div style={{ "color": "red", "fontSize": "12px" }}>
+                        {this.state.ticketNumberPriceError}
+                    </div>)}
+                    <button className="btn  user-button" style={{ marginTop: "1.5%", marginRight: "2%" }} onClick={this.removeSumbit}>Remove </button>
+                </div>
+            );
+            this.inc++;
+        }
+    }
 
     render() {
-        let count = this.state.quantity;
-        for (let i = 0; i < count; i++) {
-            console.log(this.state.ticketNameError)
-            this.fieldsArray.push(
-                <div className="row loop-array">
-                    <div className="col">
-                        <div className="form-outline">
-                            <input type="text" id="form8Example1" className="form-control" onChange={this.handleText.bind(this, this.inc)} />
-                            {this.state.ticketNumberError && (<div style={{ "color": "red", "fontSize": "12px" }}>
-                                {this.state.ticketNumberError}
-                            </div>)}
-                        </div>
-                    </div>
-                    <div className="col">
-                        <div className="form-outline">
-                            <input type="email" id="form8Example2" className="form-control" onChange={this.handleTicketNumberPrice.bind(this,this.inc)} />
-                            {this.state.ticketNumberPriceError && (<div style={{ "color": "red", "fontSize": "12px" }}>
-                                {this.state.ticketNumberPriceError}
-                            </div>)}
-                        </div>
-                    </div>
-                </div>
-
-            );
-                    this.inc++;
-        }
         return (
             <div>
                 <h3 style={{ "marginTop": "3%" }}>Add Ticket Name</h3>
@@ -168,10 +178,7 @@ class ManageTicket extends Component {
                         </div>
                         <div className="col">
                             <label className="form-label"> Ticket Number Quantity*</label>
-                            <select className="form-control" onChange={this.handleQuantitySelection}>
-                                {_.range(1, 25).map(value => <option key={value} value={value}>{value}</option>)}
-                            </select>
-
+                            <input type="text" id="form8Example1" className="form-control" onChange={this.handleQuantitySelection} />
                         </div>
                     </div>
                     <br></br>
@@ -193,9 +200,10 @@ class ManageTicket extends Component {
 
                     </div>
                     <div className="button-ticket">
-                        <button className="btn  add-user-button" onClick={this.purchaseSumbit}>Add</button>
-                        <button className="btn  add-user-button" onClick={this.viewTicket}>View Ticket</button>
-                        <button className="btn  add-user-button" onClick={this.removeSumbit}>Remove Action</button>
+                        <button style={{ marginTop: "1.5%", marginRight: "2%" }} className="btn  add-user-button" onClick={this.purchaseSumbit}>Add Ticket Name</button>
+                        <button style={{ marginTop: "1.5%", marginRight: "2%" }} className="btn  add-user-button" onClick={this.viewTicket}>View Ticket</button>
+                        <button style={{ marginTop: "1.5%", marginRight: "2%" }} className="btn  add-user-button" onClick={this.addItem}>Add Action</button>
+                        <button style={{ marginTop: "1.5%", marginRight: "2%" }} className="btn  add-user-button" onClick={this.removeSumbit}>Remove Action</button>
                     </div>
                     < ToastContainer
                         position="top-right"

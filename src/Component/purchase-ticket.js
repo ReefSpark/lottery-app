@@ -4,6 +4,9 @@ import _ from 'lodash';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Axios from 'axios'
+import history from '../history';
+import moment from 'moment-timezone';
+
 
 class PurchaseTicket extends Component {
     constructor(props) {
@@ -13,18 +16,20 @@ class PurchaseTicket extends Component {
             ticketNames: [],
             userName: "",
             ticketName: '',
-            quantity: 1,
-            showTime: '11:00',
+            quantity: 0,
+            showTime: '11:00 AM',
             actualPrice: 0,
             ticketNumber: [],
             sellingPrice: [],
             ticketNumberError: '',
             sellingPriceError: '',
             message: '',
-            values: [{}]
+            values: [{}],
+            buttonDisable: true
         }
         this.fieldsArray = [];
         this.inc = 0;
+        this.today = moment().format('YYYY-MM-DD');
     }
     validate = () => {
         let ticketNumberError = '', sellingPriceError = ''
@@ -42,23 +47,26 @@ class PurchaseTicket extends Component {
     }
     componentDidMount() {
 
+        Axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/master`).then((response) => {
+            this.setState({ ticketNames: response.data.data.attributes.data, actualPrice: response.data.data.attributes.data[0].price, ticketName: response.data.data.attributes.data[0]._id })
+            //this.loopTicketFunction(1)
+        }).catch((err) => {
+        });
         Axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user`).then((response) => {
-            this.setState({ userNames: response.data.data.attributes.data, userName: response.data.data.attributes.data[0]._id})
+
+            this.setState({ userNames: response.data.data.attributes.data, userName: response.data.data.attributes.data[0]._id })
 
         }).catch((err) => {
         });
-        Axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/master`).then((response) => {
-            this.setState({ ticketNames: response.data.data.attributes.data, actualPrice: response.data.data.attributes.data[0].price, ticketName: response.data.data.attributes.data[0]._id })
-            this.loopTicketFunction(1)
-        }).catch((err) => {
-        });
+
     }
     // componentDidUpdate() {
-    //     this.setState({ quantity: 0 })
+    //     this.setState({})
     // }
 
     handleUserNameSelection = event => {
-        this.setState({ userName: event.target.value, quantity: 0 })
+
+        this.setState({ userName: event.target.value, })
     }
     handleTicketSelection = event => {
         let i = 0;
@@ -69,33 +77,56 @@ class PurchaseTicket extends Component {
             }
             i++;
         }
-        this.setState({ quantity: 0 })
     }
     handleQuantitySelection = event => {
         this.setState({ quantity: event.target.value })
         this.loopTicketFunction(event.target.value);
-        event.target.value=0;
     }
     handleShowTimeSelection = event => {
-        this.setState({ showTime: event.target.value, quantity: 0 })
+        this.setState({ showTime: event.target.value, })
     }
     handleText = (i, event) => {
         this.state.ticketNumber[i] = event.target.value.toUpperCase()
-        this.setState({ ticketNumber: this.state.ticketNumber, quantity: 0 })
+        this.setState({ ticketNumber: this.state.ticketNumber, })
     }
 
     handleSellingPrice = (i, event) => {
-        this.state.sellingPrice[i] = event.target.value.toUpperCase()
-        this.setState({ sellingPrice: this.state.sellingPrice, quantity: 0 })
+        // var regExp = new RegExp("/^\d+$/");
+        // var strNumber = event.target.value;
+        // var isValid = regExp.test(strNumber);
+        // console.log(isValid)
+        this.state.sellingPrice[i] = event.target.value;
+        this.setState({ sellingPrice: this.state.sellingPrice, })
     }
 
     removeSumbit = () => {
         this.fieldsArray.splice(this.fieldsArray.length - 1, 1)
-        this.setState({ quantity: 0 })
+        this.setState({})
+    }
+
+    addItem = () => {
+        this.setState({ quantity: 1 })
+        this.loopTicketFunction(1);
+    }
+
+    purchasCalculation = () => {
+
+        history.push({
+            pathname: '/purchase-calculation',
+            search: `?name=${this.state.userName}`
+        })
     }
     purchaseSumbit = () => {
-        this.setState({ quantity: 0 })
+        this.setState({buttonDisable:false})
         const isValid = this.validate();
+        if (this.inc == 0) {
+            toast.error("Please Add Ticket Number");
+        }
+        let i = 0;
+        // while (i < this.inc) {
+        //     if()
+        //     i++;
+        // }
         if (isValid) {
             let i = 0;
             let ticketNumberCount = this.state.ticketNumber
@@ -120,7 +151,7 @@ class PurchaseTicket extends Component {
             })
             return Axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/v1/purchase/${this.state.userName}`, data).then((response) => {
                 if (response.status === 200)
-                    this.setState({ message: response.data.data.attributes.message })
+                    this.setState({ message: response.data.data.attributes.message, disable: false })
                 toast.success(this.state.message);
             }).catch((err) => {
                 if (err.response.status === 400) {
@@ -131,43 +162,25 @@ class PurchaseTicket extends Component {
         }
     }
 
-    loopTicketFunction(count){
+    loopTicketFunction(count) {
 
         for (let i = 0; i < count; i++) {
             this.fieldsArray.push(
-                <div className="row loop-array">
-                    <div className="col">
-                        <div className="form-outline">
-                            <input type="text" id="form8Example1" className="form-control" onChange={this.handleText.bind(this, this.inc)} />
-                            {this.state.ticketNumberError && (<div style={{ "color": "red", "fontSize": "12px" }}>
-                                {this.state.ticketNumberError}
-                            </div>)}
-                        </div>
-                    </div>
-
-                    <div className="form-outline">
-                        <select className="form-control">
-                            <option value={this.state.actualPrice}>{this.state.actualPrice}</option>
-                        </select>
-
-                    </div>
-                    <div className="col">
-                        <div className="form-outline">
-                            <input type="email" id="form8Example2" className="form-control" onChange={this.handleSellingPrice.bind(this, this.inc)} />
-                            {this.state.sellingPriceError && (<div style={{ "color": "red", "fontSize": "12px" }}>
-                                {this.state.sellingPriceError}
-                            </div>)}
-                        </div>
-                    </div>
+                <div className="loop-array" >
+                    <input type="text" style={{ marginTop: "1.5%", marginRight: "2%" }} id="form8Example1" className="form-control" onChange={this.handleText.bind(this, this.inc)} />
+                    <select style={{ marginTop: "1.5%", marginRight: "2%" }} className="form-control">
+                        <option value={this.state.actualPrice}>{this.state.actualPrice}</option>
+                    </select>
+                    <input type="email" style={{ marginTop: "1.5%", marginRight: "2%" }} id="form8Example2" className="form-control" onChange={this.handleSellingPrice.bind(this, this.inc)} />
+                    <button className="btn  user-button" onClick={this.removeSumbit}>Remove </button>
                 </div>
-
             );
             this.inc++;
         }
+
     }
 
     render() {
-       
         return (
             <div>
                 <h1 style={{ "marginTop": "3%" }}>Purchase Ticket</h1>
@@ -188,18 +201,16 @@ class PurchaseTicket extends Component {
                     </div>
                     <div className="form-outline">
                         <label className="form-label">Quantity *</label>
-                        <select className="form-controls " onChange={this.handleQuantitySelection}>
-                            {_.range(1, 50).map(value => <option key={value} value={value}>{value}</option>)}
-                        </select>
+                        <input type="text" id="form8Example1" className="form-control" onChange={this.handleQuantitySelection} />
 
                     </div>
                     <div className="form-outline">
                         <label className="form-label">Show Time *</label>
                         <select className="form-controls" value={this.state.showTime} onChange={this.handleShowTimeSelection}>
-                            <option> 11:00 AM</option>
-                            <option> 02:00 AM</option>
-                            <option> 05:00 PM</option>
-                            <option> 08:00 PM </option>
+                            <option value="11:00 AM"> 11:00 AM</option>
+                            <option value="02:00 PM"> 02:00 PM</option>
+                            <option value="05:00 PM"> 05:00 PM</option>
+                            <option value="08:00 PM"> 08:00 PM </option>
                         </select>
 
                     </div>
@@ -226,8 +237,9 @@ class PurchaseTicket extends Component {
 
                 </div>
                 <div className="button-ticket">
+                    <button style={{ width: "10%" }} className="btn  add-user-button" onClick={this.addItem}>Add Item </button>
                     <button className="btn  add-user-button" onClick={this.purchaseSumbit}>Purchase</button>
-                    <button className="btn  add-user-button" onClick={this.removeSumbit}>Remove Action</button>
+                    <button className="btn  add-user-button" disabled={this.state.buttonDisable} onClick={this.purchasCalculation}>Purchase Calculation </button>
                 </div>
                 < ToastContainer
                     position="top-right"

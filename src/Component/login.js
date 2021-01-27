@@ -4,7 +4,7 @@ import Axios from 'axios'
 import env from 'dotenv'
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Dashboard from './header'
+import history from '../history';
 
 class Login extends Component {
     constructor() {
@@ -13,10 +13,10 @@ class Login extends Component {
             email: "",
             password: "",
             message: "",
-            emailError:'',
-            passwordError:'',
+            emailError: '',
+            passwordError: '',
             enable: true,
-            disable:false
+            disable: false
         }
     }
 
@@ -53,9 +53,10 @@ class Login extends Component {
         if (isValid) {
             return Axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/login`, { data: { attributes: { email: this.state.email, password: this.state.password } } }).then((response) => {
                 this.setState({ message: response.data.data.attributes.message })
-                console.log(response.data.data.attributes.message)
+                //localStorage.setItem('token', this.state.email);
                 toast.success(this.state.message);
-                //localStorage.setItem('token', 'user');
+                //history.push('/dashobard')
+
             }).catch((err) => {
                 this.setState({ message: err.response.data.data.attributes.message })
                 return toast.error(this.state.message);
@@ -74,12 +75,12 @@ class Login extends Component {
                     <div className="login-controll">
                         <input type="text" placeholder="Email" value={this.state.email} onChange={this.handleText} /><br></br>
                         {this.state.emailError && (<div style={{ "color": "red", "fontSize": "12px" }}>
-                                    {this.state.emailError}
-                                </div>)}
+                            {this.state.emailError}
+                        </div>)}
                         <input type="password" placeholder="Password" value={this.state.password} onChange={this.handlePasswordText} /><br></br>
                         {this.state.passwordError && (<div style={{ "color": "red", "fontSize": "12px" }}>
-                                    {this.state.passwordError}
-                                </div>)}
+                            {this.state.passwordError}
+                        </div>)}
                         <button type="button" className="btn btn-primary btn-lg " id="load1" data-loading-text="<i className='fa fa-circle-o-notch fa-spin'></i> Processing Order" onClick={this.loginSumbit}>Login</button>
                     </div>
 

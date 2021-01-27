@@ -15,8 +15,8 @@ import ManageTickes from './manage-ticket'
 
 
 export default function header() {
-    
-    const logout = () => {        
+
+    const logout = () => {
         history.push('/')
     }
 
@@ -30,7 +30,7 @@ export default function header() {
                                 <Link to="/dashboard" style={{ color: "white" }}>DashBoard</Link>
                             </li>
                             <li>
-                                <Link to="/manage-tickets"  style={{ color: "white" }} >Manage Tickets</Link>
+                                <Link to="/manage-tickets" style={{ color: "white" }} >Manage Tickets</Link>
                             </li>
                             <li>
                                 <Link to="/users" style={{ color: "white" }}> Manage Users</Link>
@@ -38,24 +38,24 @@ export default function header() {
                             <li>
                                 <Link to="/purchase-ticket" style={{ color: "white" }}>Purchase Ticket</Link>
                             </li>
-                           
+
                         </ul>
                     </div>
                     <div className="second">
                         <ul>
                             <li>
                                 <img className="imageUser" src={userIamge} alt="user" />
-                                jebasingh1995@yahoo.com
+                                {localStorage.getItem('token') ? localStorage.getItem('token') :'mail@gmail.com'}
                             </li>
                             <li>
-                                <Link onClick={()=>logout()} style={{ color: "white" }}>Logout</Link>
+                                <Link onClick={() => logout()} style={{ color: "white" }}>Logout</Link>
                             </li>
                         </ul>
                     </div>
                 </div>
 
                 <Switch>
-                   
+
                     <Route path="/users">
                         <User />
                     </Route>
@@ -76,7 +76,7 @@ export default function header() {
                     </Route>
 
 
-                  
+
                 </Switch>
             </div>
         </Router>

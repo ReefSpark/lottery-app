@@ -7,6 +7,7 @@ import history from './history';
 import Dashboard from './Component/header'
 import ViewTicket from './Component/viewTickets'
 import ViewUsers from './Component/viewUsers'
+import ViewCalculation from './Component/viewCalculation.js'
 import {
   BrowserRouter as Router,
   Switch,
@@ -39,6 +40,7 @@ function App() {
           <Route exact path="/purchase-ticket" component={Dashboard} />
           <Route exact path="/view-users" component={ViewUsers} />
           <Route exact path="/view-ticket" component={ViewTicket} />
+          <Route exact path="/purchase-calculation" component={ViewCalculation} />
         </Router>
       </Switch>
 

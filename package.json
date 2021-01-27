@@ -15,6 +15,7 @@
     "lodash": "^4.17.20",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.32",
+    "query-string": "^4.3.4",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.0",
     "react-date-picker": "^8.0.6",
@@ -26,7 +27,7 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "dev":"REACT_APP_API_BASE_URL=http://999a7601572c.ngrok.io react-scripts start",
+    "dev": "REACT_APP_API_BASE_URL=http://e339f42f837a.ngrok.io  react-scripts start",
     "start": "REACT_APP_API_BASE_URL=http://68.183.247.206:5000 react-scripts start",
     "build": "REACT_APP_API_BASE_URL=http://68.183.247.206:5000  react-scripts build",
     "test": "react-scripts test",

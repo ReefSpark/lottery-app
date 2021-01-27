@@ -11,7 +11,7 @@ class Dasdboard extends Component {
         this.state = {
             userNames: [],
             userName: "",
-            date:this.today,
+            date: this.today,
             showTime: "All",
             excess: 0,
             response: [{}],
@@ -30,16 +30,16 @@ class Dasdboard extends Component {
         this.remove()
     }
 
-    dataPicker = (date,datestring) => {
+    dataPicker = (date, datestring) => {
         this.setState({ date: datestring, controll: false })
         this.remove()
     }
 
     remove() {
         var array = this.state.response
-        console.log("Count:",array)
-        array.splice(0,array.length);
-        this.setState({respone:array,excess:0,balance:0})
+        console.log("Count:", array)
+        array.splice(0, array.length);
+        this.setState({ respone: array, excess: 0, balance: 0 })
     }
 
     componentDidMount() {
@@ -65,7 +65,7 @@ class Dasdboard extends Component {
                     }
                 }
             })
-           
+
             if (this.state.showTime != 'All') data.data.attributes['show_time'] = this.state.showTime
             if (!this.state.controll) {
                 Axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/v1/purchase/dashboard`, data).then((response) => {
@@ -111,24 +111,24 @@ class Dasdboard extends Component {
                         <div className="col">
                             <div className="form-outline">
                                 <label className="form-label">DatePicker </label>
-                                <DatePicker  className="form-control" defaultValue={moment(this.today,'YYYY-MM-DD')} format={'YYYY-MM-DD'} onChange={this.dataPicker} />
+                                <DatePicker className="form-control" defaultValue={moment(this.today, 'YYYY-MM-DD')} format={'YYYY-MM-DD'} onChange={this.dataPicker} />
                             </div>
                         </div>
                         <div className="col">
                             <div className="form-outline">
                                 <label className="form-label">Show Time *</label>
                                 <select className="form-control" value={this.state.showTime} onChange={this.handleShowTimeSelection}>
-                                    <option>11:00 AM</option>
-                                    <option> 02:00 AM</option>
-                                    <option> 05:00 PM</option>
-                                    <option> 08:00 PM </option>
-                                    <option> All </option>
+                                    <option value="11:00 AM"> 11:00 AM</option>
+                                    <option value="02:00 PM"> 02:00 PM</option>
+                                    <option value="05:00 PM"> 05:00 PM</option>
+                                    <option value="08:00 PM"> 08:00 PM </option>
+                                    <option value="All"> All </option>
                                 </select>
 
                             </div>
                         </div>
 
-                    </div>
+                    </div>  
 
                 </div>
                 <br></br>
