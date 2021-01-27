@@ -117,7 +117,6 @@ class PurchaseTicket extends Component {
         })
     }
     purchaseSumbit = () => {
-        this.setState({buttonDisable:false})
         const isValid = this.validate();
         if (this.inc == 0) {
             toast.error("Please Add Ticket Number");
@@ -151,7 +150,7 @@ class PurchaseTicket extends Component {
             })
             return Axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/v1/purchase/${this.state.userName}`, data).then((response) => {
                 if (response.status === 200)
-                    this.setState({ message: response.data.data.attributes.message, disable: false })
+                    this.setState({ message: response.data.data.attributes.message, buttonDisable: false })
                 toast.success(this.state.message);
             }).catch((err) => {
                 if (err.response.status === 400) {
