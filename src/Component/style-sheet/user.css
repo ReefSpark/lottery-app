@@ -1,0 +1,47 @@
+.user-form {
+  width: 60%;
+  margin: 2% 0 0 17%;
+}
+
+.add-user-button {
+  margin-top: 3%;
+  width: 30%;
+  background-color: black !important;
+  color: white !important;
+}
+.purchase-paper {
+  /* padding: theme.spacing(2), */
+  text-align: "center";
+}
+.seprate-line {
+  border-bottom: 1px solid;
+  width: 70%;
+  margin: 3% 0 0 12%;
+}
+.user-list {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  width: 70%;
+  margin-left: 14%;
+  margin-top: 5%;
+}
+.search-button-controll {
+  width: 50%;
+  margin-left: 0.2%;
+}
+.search-box {
+  display: flex;
+  flex-flow: row;
+}
+.search-text-controll {
+  border: none;
+  border-bottom: 1px solid gray;
+}
+
+.divide-button {
+  margin-top: 5%;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+}

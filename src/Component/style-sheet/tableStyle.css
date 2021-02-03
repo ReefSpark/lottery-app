@@ -1,0 +1,12 @@
+.user-list-search{
+    display: flex;
+    flex-flow: row;
+    justify-content:space-between;
+    width:75%;
+    margin-left: 14%;
+    margin-top:5%;
+}
+.search-text{
+    width: 25%;
+    margin-right:4%
+}

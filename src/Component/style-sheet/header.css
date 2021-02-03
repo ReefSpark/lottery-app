@@ -1,0 +1,27 @@
+.main {
+    width: 100%;
+    margin:auto;
+    display: flex;
+    background-color: black;
+    justify-content: space-between;
+}
+
+ul {
+    list-style-type: none;
+}
+
+
+
+li {
+    color: white;
+    padding: 0.8em;  
+    display: inline-block;
+    font-size:  18px;
+    height: 10px;
+    font-family: Bahnschrift !important;
+}
+
+
+.imageUser{
+    width: 20px;
+}

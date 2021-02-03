@@ -1,0 +1,39 @@
+.login-phase{
+    position: relative;
+    border-radius: 5px;
+    margin-left: 25%;
+    margin-top: 15%
+}
+
+    input,
+.btn {
+  width: 75%;
+  padding: 12px;
+  border: 1px solid;
+  border-color:#c1d8f0;
+  border-radius: 4px;
+  margin:15px 0;
+  opacity: 0.85;
+  display: inline-block;
+  font-size: 20px;
+  font-family: "Times New Roman", Times, serif;
+  text-decoration: none; /* remove underline from anchors */
+}
+input[type=submit] {
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+  }
+
+  .login-controll{
+ display: flex;
+ flex-flow: column;
+  width: 80%;
+  padding: 0 50px;
+  margin-top: 6px;
+}
+#load1{
+  background-color: black
+}
+
+  

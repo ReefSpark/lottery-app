@@ -1,0 +1,17 @@
+.user-form {
+  width: 60%;
+  margin: 5% 0 0 17%;
+}
+.text-style {
+  margin-top: 20px;
+}
+.button-ticket {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-around;
+}
+.user-button {
+  width: 20%;
+  background-color: black !important;
+  color: white !important;
+}
